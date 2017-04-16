@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type"  charset="utf-8">
+		<title>Galleriffic </title>
+		{% load staticfiles %}
+		{% load static %}
+		<link rel="stylesheet" href="{% static 'gmas/css/basic.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'gmas/css/galleriffic-2.css' %}" type="text/css"/>
+		<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+		<script type="text/javascript" src="{% static 'app/js/jquery.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'gmas/js/jquery.galleriffic.js' %}"></script>
+		<script type="text/javascript" src="{% static 'gmas/js/jquery.opacityrollover.js' %}"></script>
+                <script type="text/javascript" src="{% static 'app/js/csrf_token_ajax.js' %}"></script>
+
+		<!-- We only want the thunbnails to display when javascript is disabled -->
+		<script type="text/javascript">
+			document.write('<style>.noscript { display: none; }</style>');
+		</script>
+
+	</head>
+	<body>
+		<div id="page"> 
+			<div id="container"> 
+				<h1>Galleriffic</h1>
+				<h2>Thumbnail rollover effects and slideshow crossfades</h2>
+
+	
+				<!-- Start Advanced Gallery Html Containers -->
+				<div id="gallery" class="content">
+					<div id="controls" class="controls"></div>
+					<div id="nav" class="controls"></div>
+					<div class="slideshow-container">
+						<div id="loading" class="loader"></div>
+						<div id="slideshow" class="slideshow"></div>
+					</div>
+				</div></div>
+				<form action="" method="post" style="text-align:left;">{% csrf_token %}
+				<input type="submit" name="addim" value="画像の追加">
+				</form>	
+
+                                    <div id="caption" class="caption-container"></div>
+				    <script type="text/javascript">
+	
+        jQuery(function($){
+            $(function(){
+              $('.area').on('click', function() {
+                if ($(this).prop('checked')){
+                    // 一旦全てをクリアして再チェックする
+                    $('.area').prop('checked', false);
+                    $(this).prop('checked', true);
+                }
+              });
+            });
+        });
+				$(document).on('submit','#test',function(e) {  // ボタンクリックでAJAX
+				e.preventDefault();
+				area = $('[class="area"]:checked').map(function(){
+  				return $(this).val();
+				}).get();
+				var str="";
+				if (area==1){
+					 str = $('#test_path_1').val();
+				}else if(area == 2){
+					 str = $('#test_path_2').val();
+				}else if(area == 3){
+					 str = $('#test_path_3').val();
+				}else if(area == 4){
+					 str = $('#test_path_4').val();
+				}
+				$.ajax({
+				url:'/shape/',
+				type:'POST',
+				data:{
+					test_text:$('#test_text').val(),
+					test_path:str,
+					csrfmiddlwareroken:$('input[name=csrfmiddlewaretoken]').val(),
+				//	thumb:$('.thumb').val(),
+				 },
+				success:function(){
+		
+					location.reload();
+				},	
+
+			 });
+		}); 
+			
+
+				  </script>
+
+				<div id="thumbs" class="navigation">
+					<ul class="thumbs noscript">
+					  {% for item in items %}
+						<li>
+							<a class="thumb" href="{{ item.file.url }}" name="{{item.file.name}}" title="{{ item.file.name }}">
+								<img src="{{ item.file.url }}" alt="{{ item.file.name }}" height=100px width=100px />
+							</a>
+							
+							<div class="caption">
+                                  <form id="test" action="" method="POST" >{% csrf_token %}
+                                    <input id="test_btn" type="submit" value="submit" >
+				<h3>表示中の画像名</h3>  <input type="hidden" id="test_text" value="{{ item.file.name }}"><label id="test_label" value="{{ item.file.name }}"><h2>{{ item.file.name }}</h2></label>
+				<table>
+				<tr><td><h3>保存先のフォルダ</h3></td><td><input type="checkbox" class="area" value="1"><td></td><td><input type="text" id="test_path_1" ></td></tr>
+				<tr><td><h3>保存先のフォルダ</h3></td><td><input type="checkbox" class="area" value="2"><td></td><td><input type="text" id="test_path_2" ></td></tr>
+				<tr><td><h3>保存先のフォルダ</h3></td><td><input type="checkbox" class="area" value="3"><td></td><td><input type="text" id="test_path_3" ></td></tr>
+				<tr><td><h3>保存先のフォルダ</h3></td><td><input type="checkbox" class="area" value="4"><td></td><td><input type="text" id="test_path_4" ></td></tr>
+			
+				</table>
+								<div class="download">
+									<a href="{{ item.file.url }}">Download Original</a>
+								</div>
+                                  </form>
+							</div>
+						</li>
+					{% endfor %}
+					</ul>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+		<div id="footer">&copy; 2009 Trent Foley</div>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				// We only want these styles applied when javascript is enabled
+				$('div.navigation').css({'width' : '300px', 'float' : 'left'});
+				$('div.content').css('display', 'block');
+
+				// Initially set opacity on thumbs and add
+				// additional styling for hover effect on thumbs
+				var onMouseOutOpacity = 0.67;
+				$('#thumbs ul.thumbs li').opacityrollover({
+					mouseOutOpacity:   onMouseOutOpacity,
+					mouseOverOpacity:  1.0,
+					fadeSpeed:         'fast',
+					exemptionSelector: '.selected'
+				});
+				
+				// Initialize Advanced Galleriffic Gallery
+				var gallery = $('#thumbs').galleriffic({
+					delay:                     3000,
+					numThumbs:                 16,
+					preloadAhead:              10,
+					enableTopPager:            true,
+					enableBottomPager:         true,
+					maxPagesToShow:            7,
+					imageContainerSel:         '#slideshow',
+					ssControlsContainerSel:    '#controls',
+					navControlsContainerSel:   '#nav',
+					captionContainerSel:       '#caption',
+					loadingContainerSel:       '#loading',
+					renderSSControls:          true,
+					renderNavControls:         true,
+					playLinkText:              'Play Slideshow',
+					pauseLinkText:             'Pause Slideshow',
+					prevLinkText:              '&lsaquo; Previous Photo',
+					nextLinkText:              'Next Photo &rsaquo;',
+					nextPageLinkText:          'Next &rsaquo;',
+					prevPageLinkText:          '&lsaquo; Prev',
+					enableHistory:             false,
+					autoStart:                 false,
+					syncTransitions:           true,
+					defaultTransitionDuration: 100,
+					onSlideChange:             function(prevIndex, nextIndex) {
+						// 'this' refers to the gallery, which is an extension of $('#thumbs')
+						this.find('ul.thumbs').children()
+							.eq(prevIndex).fadeTo('fast', onMouseOutOpacity).end()
+							.eq(nextIndex).fadeTo('fast', 1.0);
+					},
+					onPageTransitionOut:       function(callback) {
+						this.fadeTo('fast', 0.0, callback);
+					},
+					onPageTransitionIn:        function() {
+						this.fadeTo('fast', 1.0);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,2 @@
+Quick getting started with dropzone.js - 
+Use dropzone.html which has all self contained code - all css and js.  

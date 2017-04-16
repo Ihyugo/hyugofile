@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Upload a file in Django 1.5 using Dropzone.js</title>
+    {% load staticfiles %}
+    {% load static %}
+    <link href="{% static 'dropzone/css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+
+
+    <form action="{% url "app:index" %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="submit" name="upload-all"  value="Upload all files">
+    </form>
+        <form action="{% url "app:index" %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
+      <input type="submit" name="search"  value="search directory">
+	{{makepath}}
+	</form>
+    <form class="dropzone" action="{% url "app:index" %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+    </form>
+
+    <script src="{% static 'dropzone/js/dropzone.js' %}"></script>
+    <script type="text/javascript">
+      Dropzone.options.myDropzone = {
+           // Prevents Dropzone from uploading dropped files immediately
+      autoProcessQueue : false,
+      
+      init : function() {
+      var submitButton = document.querySelector("submit-all")
+      myDropzone = this;
+      
+      submitButton.addEventListener("click", function() {
+      myDropzone.processQueue();
+      // Tell Dropzone to process all queued files.
+      });
+      
+      // You might want to show the submit button only when
+      // files are dropped here:
+      this.on("addedfile", function() {
+      // Show submit button here and/or inform user to click it.
+      });
+      }      
+      };
+    </script>
+  </body>
+</html>
+

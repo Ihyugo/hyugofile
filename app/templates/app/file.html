@@ -1,0 +1,35 @@
+<html>
+<head>
+ 
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("jquery", "1.7");</script>
+<script type="text/javascript">
+ 
+function func1(){
+var $input = $('<input type="checkbox" />').attr({name: 'test1'}).attr("checked", true );
+var $label = $('<label>labeltest1</label>')
+$("#inputtest").html($input).append($label);
+var $input = $('<input type="checkbox" />').attr({name: 'test2'});
+var $label = $('<label>labeltest2</label>')
+$("#inputtest").append($input).append($label);
+}
+ 
+function func2(){
+    alert("labeltest1:" + $('input[name="test1"]:checked').val());
+    alert("labeltest2:" + $('input[name="test2"]:checked').val());
+}
+ 
+</script>
+ 
+</head>
+<body>
+ 
+<input type="button" name="test" value="test" onclick="func1()"/>
+<div id="inputtest"></div>
+ 
+<input type="button" name="test" value="チェックボックス確認" onclick="func2()"/>
+ 
+</body>
+</html>
+
+
