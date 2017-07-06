@@ -20,7 +20,8 @@ from . import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('app.urls', namespace="app" , app_name="app"))
+    url(r'^app/', include('app.urls', namespace="app" , app_name="app")),
+    url(r'^pic/', include('pic.urls', namespace="pic", app_name="pic")),
 
 ]
 

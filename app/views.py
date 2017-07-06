@@ -19,7 +19,7 @@ from mysite import settings
 
 
 def file(request):
-	return render_to_response('app/dropzone.html')
+    return render_to_response('app/dropzone.html')
 
 
 @csrf_protect
@@ -29,7 +29,7 @@ def index(request):
     form = UploadFileForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
          if 'upload-all' in request.POST:
-             return HttpResponseRedirect('/shape/')
+             return HttpResponseRedirect('/app/shape/')
          if form.is_valid():
              new_file = UploadFile(file = request.FILES['file'])
              new_file.save()
@@ -44,7 +44,7 @@ def index(request):
                             makefile = os.path.basename(newfile)
                             shutil.copy(newfile,MEDIA_ROOT)
                             obj = UploadFile.objects.get_or_create(file=makefile)
-    c = {'form': form,'makepath':makepath,}
+    c = {'form': form, 'makepath': makepath, }
     return render(request,'app/index.html', c)
 
 
@@ -53,7 +53,10 @@ def shape(request):
     c = {}
     if request.method == 'POST':
        if 'addim' in request.POST:
-             return HttpResponseRedirect('/app/') 
+             return HttpResponseRedirect('/app/app/')
+       if 'deleteim' in request.POST:
+           obj = UploadFile.objects.all()
+           obj.delete
 
        postroot = request.POST['test_path']
        postfile = request.POST['test_text']

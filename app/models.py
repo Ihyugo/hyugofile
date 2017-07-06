@@ -6,10 +6,6 @@ from django.dispatch import receiver
 
 class UploadFile(models.Model):
 	file = models.FileField(upload_to='')
-	"""
-	def delete(self, *args, **kwargs):
-		super(self).delete(*args,**kwargs)
-	"""
 
 @receiver(post_delete, sender=UploadFile)
 def delete_file(sender, instance, **kwargs):
