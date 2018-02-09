@@ -52,22 +52,22 @@ def index(request):
 def shape(request):
     c = {}
     if request.method == 'POST':
-       if 'addim' in request.POST:
-             return HttpResponseRedirect('/app/app/')
-       if 'deleteim' in request.POST:
-           obj = UploadFile.objects.all()
-           obj.delete
-
-       postroot = request.POST['test_path']
-       postfile = request.POST['test_text']
-       passname = MEDIA_ROOT +'/'+ postfile
-       if os.path.exists(postroot) == False:
-            os.mkdir(postroot)
-       if os.path.exists( postroot +'/' +postfile )== False:
-               shutil.move(passname,postroot)
-       storage = get_storage_class()
-       obj = UploadFile.objects.get(file=postfile)
-       obj.delete()
+        if 'addim' in request.POST:
+            return HttpResponseRedirect('/app/app/')
+        if 'deleteim' in request.POST:
+            obj = UploadFile.objects.all()
+            obj.delete()
+        else:
+            postroot = request.POST['test_path']
+            postfile = request.POST['test_text']
+            passname = MEDIA_ROOT +'/'+ postfile
+            if os.path.exists(postroot) == False:
+                os.mkdir(postroot)
+            if os.path.exists( postroot +'/' +postfile )== False:
+                shutil.move(passname,postroot)
+            storage = get_storage_class()
+            obj = UploadFile.objects.get(file=postfile)
+            obj.delete()
       
     items = []
     for item in UploadFile.objects.all():
