@@ -18,6 +18,8 @@ from mysite import settings
 # Create your views here.
 
 
+#test
+
 def file(request):
     return render_to_response('app/dropzone.html')
 
